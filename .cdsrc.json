@@ -3,9 +3,10 @@
         "native_hana_associations": false
     },
     "requires": {
-        "db": "hana"
+        "db": "hana",
+        "destinations": true
     },
     "odata": {
-		"version": "v4"
-	}
+        "version": "v4"
+    }
 }

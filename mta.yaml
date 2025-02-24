@@ -26,6 +26,7 @@ modules:
           srv-url: ${default-url}
     requires:
       - name: corso_cap-db
+      - name: corso_cap-destination
 
   - name: corso_cap-db-deployer
     type: hdb
@@ -45,3 +46,8 @@ resources:
     parameters:
       service: hana
       service-plan: hdi-shared
+  - name: corso_cap-destination
+    type: org.cloudfoundry.managed-service
+    parameters:
+      service: destination
+      service-plan: lite
