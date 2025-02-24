@@ -60,6 +60,36 @@ modules:
     - npm install
     - npm run build:cf
     supported-platforms: []
+- name: corso_cap-destination-content
+  type: com.sap.application.content
+  requires:
+  - name: corso_cap-destination
+    parameters:
+      content-target: true
+  - name: corso_cap-repo-host
+    parameters:
+      service-key:
+        name: corso_cap-repo-host-key
+  - name: uaa_corso_cap
+    parameters:
+      service-key:
+        name: uaa_corso_cap-key
+  parameters:
+    content:
+      instance:
+        destinations:
+        - Name: corso_cap_ar_corso_cap_repo_host
+          ServiceInstanceName: corso_cap-html5-service
+          ServiceKeyName: corso_cap-repo-host-key
+          sap.cloud.service: corso_cap_ar
+        - Authentication: OAuth2UserTokenExchange
+          Name: corso_cap_ar_uaa_corso_cap
+          ServiceInstanceName: corso_cap-xsuaa-service
+          ServiceKeyName: uaa_corso_cap-key
+          sap.cloud.service: corso_cap_ar
+        existing_destinations_policy: ignore
+  build-parameters:
+    no-source: true
 resources:
 - name: corso_cap-db
   type: com.sap.xs.hdi-container
@@ -88,6 +118,13 @@ resources:
     service: html5-apps-repo
     service-name: corso_cap-html5-service
     service-plan: app-host
+- name: uaa_corso_cap
+  type: org.cloudfoundry.managed-service
+  parameters:
+    path: ./xs-security.json
+    service: xsuaa
+    service-name: corso_cap-xsuaa-service
+    service-plan: application
 parameters:
   deploy_mode: html5-repo
   enable-parallel-deployments: true
