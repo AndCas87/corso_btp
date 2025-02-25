@@ -13,13 +13,16 @@ modules:
   requires:
   - name: corso_cap-db
   - name: corso_cap-destination
+  - name: uaa_corso_cap
   provides:
-  - name: srv-api
+  - name: srv_api
     properties:
       srv-url: ${default-url}
   parameters:
     buildpack: sap_java_buildpack_jakarta
     instances: 1
+    disk-quota: 512M
+    memory: 512M
   build-parameters:
     build-result: target/*-exec.jar
     builder: custom
@@ -60,7 +63,7 @@ modules:
     - npm install
     - npm run build:cf
     supported-platforms: []
-- name: corso_cap-destination-content
+- name: corso_cap-approuter
   type: com.sap.application.content
   requires:
   - name: corso_cap-destination
@@ -109,9 +112,17 @@ resources:
             ProxyType: Internet
             Type: HTTP
             URL: https://ui5.sap.com
+          - Authentication: NoAuthentication
+            HTML5.ForwardAuthToken: true
+            Name:  dest_int
+            ProxyType: Internet
+            Type: HTTP
+            URL: ~{srv_api/srv-url}
           existing_destinations_policy: update
     service: destination
     service-plan: lite
+  requires:
+    - name: srv_api
 - name: corso_cap-repo-host
   type: org.cloudfoundry.managed-service
   parameters:
